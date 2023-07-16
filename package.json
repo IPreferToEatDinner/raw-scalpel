@@ -2,16 +2,22 @@
   "name": "raw-scalpel",
   "version": "1.0.0",
   "description": "this is a web image processer which is written by typescript, it operates several forms of raw files such as CR2, and help you change its attributes like brightness.",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-		"url": ""
+    "url": ""
   },
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
     "lint": "eslint src/**/*.{js,ts} --fix",
-    "format": "prettier --write src/**/*.{js,ts}"
+    "format": "prettier --write src/**/*.{js,ts}",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "raw",
