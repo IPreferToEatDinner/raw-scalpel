@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable func-names */
 /* eslint-disable no-undef */
 /* eslint-disable no-param-reassign */
@@ -12,6 +13,7 @@
     root.webglUtils = factory.call(root);
   }
 })(this, function () {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const topWindow = this;
 
   /**
@@ -76,9 +78,9 @@
    * @returns {WebGLShader} The created shader.
    */
   function createShaderFromScript(gl, scriptId, opt_shaderType, opt_errorCallback) {
-    const shaderScript = document.querySelector(scriptId);
+    const shaderScript = document.querySelector(`#${scriptId}`);
     if (!shaderScript) {
-      throw new Error(`*** Error: unknown script element${scriptId}`);
+      throw new Error(`*** Error: unknown script element ${scriptId}`);
     }
 
     const shaderSource = shaderScript.textContent;
@@ -158,5 +160,31 @@
 
     return createProgram(gl, shaders, opt_attribs, opt_locations, opt_errorCallback);
   }
-  return { createProgramFromScripts };
+
+  /**
+   * Resize a canvas to match the size its displayed.
+   * @param {HTMLCanvasElement} canvas The canvas to resize.
+   * @param {number} [multiplier] amount to multiply by.
+   *    Pass in window.devicePixelRatio for native pixels.
+   * @return {boolean} true if the canvas was resized.
+   * @memberOf module:webgl-utils
+   */
+  function resizeCanvasToDisplaySize(canvas, multiplier) {
+    multiplier = multiplier || 1;
+    const width = (canvas.clientWidth * multiplier) | 0;
+    const height = (canvas.clientHeight * multiplier) | 0;
+
+    if (multiplier !== 1) {
+      canvas.width = width;
+      canvas.height = height;
+      return true;
+    }
+
+    return false;
+  }
+
+  return {
+    createProgramFromScripts,
+    resizeCanvasToDisplaySize,
+  };
 });

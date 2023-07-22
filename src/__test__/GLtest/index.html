@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body>
+  <body onload="main()">
     <canvas id="c"></canvas>
   </body>
 </html>
@@ -13,13 +13,13 @@
 <script src="webgl.utils.js"></script>
 <!-- vertex shader -->
 <script id="vertex-shader-2d" type="notjs">
-  attribute vec4 a_position;
+  attribute vec2 a_position;
 
   uniform vec2 u_resolution;
 
   void main() {
      // convert the position from pixels to 0.0 to 1.0
-     vec2 zeroToOne = a_position.xy / u_resolution;
+     vec2 zeroToOne = a_position / u_resolution;
 
      // convert from 0->1 to 0->2
      vec2 zeroToTwo = zeroToOne * 2.0;
@@ -33,9 +33,10 @@
 <!-- fragment shader -->
 <script id="fragment-shader-2d" type="notjs">
   precision mediump float;
+  uniform vec4 u_color;
 
   void main() {
-    gl_FragColor = vec4(1, 0, 0.5, 1); // return redish-purple
+    gl_FragColor = u_color;
   }
 </script>
 
@@ -62,6 +63,8 @@
 
     // look up uniform locations
     let resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
+
+    let colorUniformLocation = gl.getUniformLocation(program, 'u_color');
 
     // Create a buffer to put three 2d clip space points in
     let positionBuffer = gl.createBuffer();
@@ -107,6 +110,4 @@
     let count = 6;
     gl.drawArrays(primitiveType, offset, count);
   }
-
-  main();
 </script>
